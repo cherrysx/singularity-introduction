@@ -1,0 +1,27 @@
+{% comment %}
+  JavaScript used in lesson and workshop pages.
+{% endcomment %}
+<script src="{{ relative_root_path }}/assets/js/jquery.min.js"></script>
+<script src="{{ relative_root_path }}/assets/js/bootstrap.min.js"></script>
+<script src="{{ relative_root_path }}/assets/js/lesson.js"></script>
+
+{% if page.math %}
+<script src="{{ relative_root_path }}/assets/js/katex.min.js"></script>
+<script>
+options={
+  delimiters: [
+    {left: "$$", right: "$$", display: true},
+    {left: "$", right: "$", display: false},
+    {left: "\\(", right: "\\)", display: false},
+    {left: "\\[", right: "\\]", display: true}
+  ],
+  output: "mathml"
+}
+</script>
+<script src="{{ relative_root_path }}/assets/js/katex-auto-render.min.js" onload="renderMathInElement(document.body, options)"></script>
+{% endif %}
+
+<script src="{{ relative_root_path }}/assets/js/anchor.min.js"></script>
+<script>
+    anchors.add();
+</script>
