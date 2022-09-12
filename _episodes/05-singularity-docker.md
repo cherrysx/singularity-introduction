@@ -1,22 +1,22 @@
 ---
-title: "Using Docker images with Singularity"
+title: "Singularity使用Docker镜像"
 teaching: 5
 exercises: 10
 questions:
-- "How do I use Docker images with Singularity?"
+- "如何将Docker镜像与 Singularity 一起使用？"
 objectives:
-- "Learn how to run Singularity containers based on Docker images."
+- "了解如何基于Docker镜像运行Singularity容器。"
 keypoints:
-- "Singularity can start a container from a Docker image which can be pulled directly from Docker Hub."
+- "Singularity可以从Docker镜像启动一个容器，该镜像可以直接从Docker Hub拉取。"
 ---
 
-## Using Docker images with Singularity
+## Singularity使用Docker镜像
 
-Singularity can also start containers directly from Docker images, opening up access to a huge number of existing container images available on [Docker Hub](https://hub.docker.com/) and other registries.
+Singularity还可以直接从Docker镜像启动容器，从而可以访问 [Docker Hub](https://hub.docker.com/) 和其他注册表上可用的大量现有容器镜像。
 
-While Singularity doesn't actually run a container using the Docker image (it first converts it to a format suitable for use by Singularity), the approach used provides a seamless experience for the end user. When you direct Singularity to run a container based on pull a Docker image, Singularity pulls the slices or _layers_ that make up the Docker image and converts them into a single-file Singularity SIF image.
+虽然Singularity实际上并没有使用Docker镜像运行容器（它首先将其转换为适合 Singularity 使用的格式），但所使用的方法为最终用户提供了无缝体验。当您指示Singularity基于拉取Docker镜像运行容器时，Singularity会拉取组成Docker镜像的切片或_layers_，并将它们转换为单文件 Singularity SIF 镜像。
 
-For example, moving on from the simple _Hello World_ examples that we've looked at so far, let's pull one of the [official Docker Python images](https://hub.docker.com/_/python). We'll use the image with the tag `3.9.6-slim-buster` which has Python 3.9.6 installed on Debian's [Buster](https://www.debian.org/releases/buster/) (v10) Linux distribution:
+例如，从我们目前看到的简单的_Hello World_示例继续，让我们拉出 [官方Docker Python images](https://hub.docker.com/_/python) 之一。我们将使用带有标签“3.9.6-slim-buster”的图像，它在 Debian的[Buster](https://www.debian.org/releases/buster/) (v10) Linux 上安装了 Python 3.9.6分配：
 
 ~~~
 $ singularity pull python-3.9.6.sif docker://python:3.9.6-slim-buster
@@ -44,24 +44,24 @@ INFO:    Creating SIF file...
 ~~~
 {: .output}
 
-Note how we see singularity saying that it's "_Converting OCI blobs to SIF format_". We then see the layers of the Docker image being downloaded and unpacked and written into a single SIF file. Once the process is complete, we should see the python-3.9.6.sif image file in the current directory.
+请注意我们如何看到Singularity说它是“_Converting OCI blobs to SIF format_”。 然后，我们看到Docker镜像的各个层被下载并解压缩并写入单个 SIF 文件。 该过程完成后，我们应该会在当前目录中看到 python-3.9.6.sif 图像文件。
 
-We can now run a container from this image as we would with any other singularity image.
+我们现在可以从这个镜像运行一个容器，就像我们使用任何其他Singularity镜像一样。
 
-> ## Running the Python 3.9.6 image that we just pulled from Docker Hub
+> ## 运行我们刚刚从 Docker Hub 中提取的 Python 3.9.6 镜像
 >
-> Try running the Python 3.9.6 image. What happens?
+> 尝试运行 Python 3.9.6 镜像。 发生什么了？
+>
+> 尝试运行一些简单的 Python 语句...
 > 
-> Try running some simple Python statements...
-> 
-> > ## Running the Python 3.9.6 image
+> > ## 运行 Python 3.9.6 镜像
 > >
 > > ~~~
 > > $ singularity run python-3.9.6.sif
 > > ~~~
 > > {: .language-bash}
 > > 
-> > This should put you straight into a Python interactive shell within the running container:
+> > 这应该让您直接进入正在运行的容器中的 Python 交互式 shell：
 > > 
 > > ~~~
 > > Python 3.9.6 (default, Jul 22 2021, 15:24:21) 
@@ -69,7 +69,7 @@ We can now run a container from this image as we would with any other singularit
 > > Type "help", "copyright", "credits" or "license" for more information.
 > > >>> 
 > > ~~~
-> > Now try running some simple Python statements:
+> > 现在尝试运行一些简单的 Python 语句：
 > > ~~~
 > > >>> import math
 > > >>> math.pi
@@ -80,18 +80,18 @@ We can now run a container from this image as we would with any other singularit
 > {: .solution}
 {: .challenge}
 
-In addition to running a container and having it run the default run script, you could also start a container running a shell in case you want to undertake any configuration prior to running Python. This is covered in the following exercise:
+除了运行容器并让它运行默认运行脚本之外，您还可以启动一个运行 shell 的容器，以防您想在运行 Python 之前进行任何配置。 这将在以下练习中介绍：
 
-> ## Open a shell within a Python container
+> ## 在 Python容器中打开一个 shell
 >
-> Try to run a shell within a singularity container based on the `python-3.9.6.sif` image. That is, run a container that opens a shell rather than the default Python interactive console as we saw above.
-> See if you can find more than one way to achieve this.
+> 尝试在基于`python-3.9.6.sif` 镜像的容器中运行 shell。 也就是说，运行一个打开 shell 的容器，而不是我们上面看到的默认 Python 交互式控制台。
+> 看看你是否能找到不止一种方法来实现这一目标。
+>
+> 在 shell 中，尝试启动 Python 交互式控制台并运行一些 Python 命令。
 > 
-> Within the shell, try starting the Python interactive console and running some Python commands.
-> 
-> > ## Solution
+> > ## 解决方案
 > >
-> > Recall from the earlier material that we can use the `singularity shell` command to open a shell within a container. To open a regular shell within a container based on the `python-3.9.6.sif` image, we can therefore simply run:
+> > 回想一下前面的材料，我们可以使用 `singularity shell` 命令打开容器内的外壳。 要在基于 `python-3.9.6.sif` 镜像的容器中打开常规 shell，我们可以简单地运行：
 > > ~~~
 > > $ singularity shell python-3.9.6.sif
 > > ~~~
@@ -116,7 +116,7 @@ In addition to running a container and having it run the default run script, you
 > > ~~~
 > > {: .output}
 > > 
-> > It is also possible to use the `singularity exec` command to run an executable within a container. We could, therefore, use the `exec` command to run `/bin/bash`:
+> > 也可以使用 `singularity exec` 命令在容器中运行可执行文件。 因此，我们可以使用 `exec` 命令运行 `/bin/bash`：
 > > 
 > > ~~~
 > > $ singularity exec python-3.9.6.sif /bin/bash
@@ -129,11 +129,9 @@ In addition to running a container and having it run the default run script, you
 > > ~~~
 > > {: .output}
 > > 
-> > You can run the Python console from your container shell simply by running the `python` command.
+> > 您只需运行“python”命令即可从容器shell运行 Python 控制台。
 > {: .solution}
 {: .challenge}
-
-This concludes the fifth episode and Part I of the Singularity material. Part II contains a further three episodes where we'll look at creating your own images and then more advanced use of containers for running MPI parallel applications.
 
 ## References
 

@@ -1,10 +1,7 @@
 ---
-title: Setup
+title: 准备事项
 ---
-If you are attending a taught version of this lesson, it is likely that the course organisers will provide access to a platform with Singularity and MPI pre-installed for undertaking parts of the lesson. You may be required to undertake an account registration process in order to gain access this platform. The course organisers will provide details in advance.
 
-For building containers, you'll need access to a platform with [Docker](https://www.docker.com/) installed, where either your user is in the `docker` group (i.e. you can run and commit containers and run other docker commands as your own user without having to prefix docker commands with `sudo`), or where your user is configured for sudo access on the system and you can run Docker commands when prefixing them with `sudo`.
-
-Beyond any account registration that may be required and the prerequisites described on the main lesson page, there is no further lesson setup to complete.
+要构建容器，您需要访问安装了[Docker](https://www.docker.com/) 的平台，其中您的用户位于 `docker` 组中（即，您可以运行和提交容器和 以您自己的用户身份运行其他 docker 命令，而无需在 docker 命令前加上 `sudo`），或者在您的用户配置为在系统上进行 sudo 访问的位置，并且您可以在使用 sudo 前缀时运行 Docker 命令。
 
 {% include links.md %}

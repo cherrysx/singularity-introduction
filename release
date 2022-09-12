@@ -1,0 +1,9 @@
+#!/bin/bash
+
+make site
+
+\mv -f _site singularity 
+
+rsync -r singularity root@175.24.122.92:/opt/elearning/
+
+\mv -f singularity _site

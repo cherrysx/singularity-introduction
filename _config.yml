@@ -10,7 +10,7 @@
 carpentry: "incubator"   # "swc" in future
 
 # Overall title for pages.
-title: "使用容器的可重现计算环境：Singularity简介"
+title: "可重用HPC软件计算环境：Singularity简介"
 
 # Life cycle stage of the lesson
 # See this page for more details: https://cdh.carpentries.org/the-lesson-life-cycle.html

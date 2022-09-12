@@ -1,28 +1,28 @@
 ---
-title: "Files in Singularity containers"
+title: "Singularity容器中的文件"
 teaching: 10
 exercises: 10
 questions:
-- "How do I make data available in a Singularity container?"
-- "What data is made available by default in a Singularity container?"
+- "如何使数据在 Singularity 容器中可用？"
+- "Singularity 容器中默认提供哪些数据？"
 objectives:
-- "Understand that some data from the host system is usually made available by default within a container"
-- "Learn more about how Singularity handles users and binds directories from the host filesystem."
+- "了解主机系统中的哪些数据通常在容器中默认可用"
+- "了解有关 Singularity 如何处理用户和绑定主机文件系统中的目录的更多信息。"
 keypoints:
-- "Your current directory and home directory are usually available by default in a container."
-- "You have the same username and permissions in a container as on the host system."
-- "You can specify additional host system directories to be available in the container."
+- "默认情况下，您的当前目录和主目录通常在容器中可用。"
+- "您在容器中拥有与主机系统相同的用户名和权限。"
+- "您可以指定容器中可用的其他主机系统目录。"
 ---
 
-The way in which user accounts and access permissions are handeld in Singularity containers is very different from that in Docker (where you effectively always have superuser/root access). When running a Singularity container, you only have the same permissions to access files as the user you are running as on the host system.
+在 Singularity 容器中处理用户帐户和访问权限的方式与在 Docker 中（您实际上始终拥有超级用户/root 访问权限）中的方式非常不同。 运行 Singularity 容器时，您仅具有与在主机系统上运行的用户相同的访问文件的权限。
 
-In this episode we'll look at working with files in the context of Singularity containers and how this links with Singularity's approach to users and permissions within containers.
+在这里，我们将研究在 Singularity 容器的上下文中处理文件，以及这如何与 Singularity 对容器内的用户和权限的方法联系起来。
 
-## Users within a Singularity container
+## Singularity容器中的用户
 
-The first thing to note is that when you ran `whoami` within the container shell you started at the end of the previous episode, you should have seen the username that you were signed in as on the host system when you ran the container. 
+首先要注意的是，当您在上一节结束时开始的容器shell中运行“whoami”时，您应该已经看到运行容器时在主机系统上登录的用户名。
 
-For example, if my username were `jc1000`, I'd expect to see the following:
+例如，如果我的用户名是 `jc1000`，我希望看到以下内容：
 
 ~~~
 $ singularity shell hello-world.sif
@@ -31,23 +31,23 @@ jc1000
 ~~~
 {: .language-bash}
 
-But hang on! I downloaded the standard, public version of the `hello-world.sif` image from Singularity Hub. I haven't customised it in any way. How is it configured with my own user details?!
+我从Singularity Hub下载了标准的公开版`hello-world.sif`镜像。我没有以任何方式定制它。它是如何使用我自己的用户详细信息配置的？！
 
-If you have any familiarity with Linux system administration, you may be aware that in Linux, users and their Unix groups are configured in the `/etc/passwd` and `/etc/group` files respectively. In order for the shell within the container to know of my user, the relevant user information needs to be available within these files within the container.
+如果您熟悉Linux系统管理，您可能知道在Linux中，用户及其组分别在`/etc/passwd`和`/etc/group`文件中配置。为了让容器内的shell知道我的用户，相关的用户信息需要在容器内的这些文件中可用。
 
-Assuming this feature is enabled within the installation of Singularity on your system, when the container is started, Singularity appends the relevant user and group lines from the host system to the `/etc/passwd` and `/etc/group` files within the container [\[1\]](https://www.intel.com/content/dam/www/public/us/en/documents/presentation/hpc-containers-singularity-advanced.pdf).
+假设在您的系统上安装 Singularity 时启用了此功能，当容器启动时，Singularity 会将主机系统中的相关用户和组行附加到 `/etc/passwd` 和 `/etc/group` 文件中容器 [\[1\]]（https://www.intel.com/content/dam/www/public/us/en/documents/presentation/hpc-containers-singularity-advanced.pdf）。
 
-This means that the host system can effectively ensure that you cannot access/modify/delete any data you should not be able to on the host system and you cannot run anything that you would not have permission to run on the host system since you are restricted to the same user permissions within the container as you are on the host system.
+这意味着主机系统可以有效地确保您无法访问/修改/删除您不应在主机系统上访问的任何数据，并且您无法运行您无权在主机系统上运行的任何内容，因为您受到限制容器内的用户权限与您在主机系统上的用户权限相同。
 
-## Files and directories within a Singularity container
+## Singularity容器中的文件和目录
 
-Singularity also _binds_ some _directories_ from the host system where you are running the `singularity` command into the container that you're starting. Note that this bind process is not copying files into the running container, it is making an existing directory on the host system visible and accessible within the container environment. If you write files to this directory within the running container, when the container shuts down, those changes will persist in the relevant location on the host system.
+Singularity 还会将运行“singularity”命令的主机系统中的一些_目录_绑定到您正在启动的容器中。请注意，此绑定过程不是将文件复制到正在运行的容器中，而是使主机系统上的现有目录在容器环境中可见和可访问。如果您在正在运行的容器中将文件写入此目录，则当容器关闭时，这些更改将保留在主机系统上的相关位置。
 
-There is a default configuration of which files and directories are bound into the container but ultimate control of how things are set up on the system where you are running Singularity is determined by the system administrator. As a result, this section provides an overview but you may find that things are a little different on the system that you're running on.
+将哪些文件和目录绑定到容器中有一个默认配置，但最终控制如何在运行Singularity的系统上进行设置是由系统管理员决定的。因此，本节提供了一个概述，但您可能会发现在您运行的系统上有些不同。
 
-One directory that is likely to be accessible within a container that you start is your _home directory_.  You may also find that the directory from which you issued the `singularity` command (the _current working directory_) is also mapped.
+在您启动的容器中可能可以访问的一个目录是您的_home目录_。您可能还会发现您发出`singularity`命令的目录（_当前工作目录_）也被映射了。
 
-The mapping of file content and directories from a host system into a Singularity container is illustrated in the example below showing a subset of the directories on the host Linux system and in a Singularity container:
+下面的示例说明了文件内容和目录从主机系统到 Singularity 容器的映射，显示了主机 Linux 系统和 Singularity 容器中的目录子集：
 
 ~~~
 Host system:                                                      Singularity container:
@@ -67,34 +67,34 @@ Host system:                                                      Singularity co
 ~~~
 {: .output}
 
-> ## Questions and exercises: Files in Singularity containers
+> ## 问题和练习：Singularity容器中的文件
 >
-> **Q1:** What do you notice about the ownership of files in a container started from the hello-world image? (e.g. take a look at the ownership of files in the root directory (`/`))
-> 
-> **Exercise 1:** In this container, try editing (for example using the editor `vi` which should be avaiable in the container) the `/rawr.sh` file. What do you notice?
+> **Q1:** 对于从hello-world映像开始的容器中文件的所有权，您有什么注意事项？ （例如，查看根目录（`/`）中文件的所有权）
 >
-> _If you're not familiar with `vi` there are many quick reference pages online showing the main commands for using the editor, for example [this one](http://web.mit.edu/merolish/Public/vi-ref.pdf)._
-> 
-> **Exercise 2:** In your home directory within the container shell, try and create a simple text file. Is it possible to do this? If so, why? If not, why not?! If you can successfully create a file, what happens to it when you exit the shell and the container shuts down?
+> **练习 1：** 在这个容器中，尝试编辑（例如使用容器中应该可用的编辑器 `vi`）`/rawr.sh` 文件。 你注意到什么？
 >
-> > ## Answers
+> _如果你不熟悉 `vi`，网上有很多快速参考页面显示了使用编辑器的主要命令，例如 [this one](http://web.mit.edu/merolish/Public/vi- 参考.pdf)._
+>
+> **练习 2：** 在容器shell的主目录中，尝试创建一个简单的文本文件。 是否有可能做到这一点？ 如果是这样，为什么？ 如果不是，为什么不呢？！ 如果你可以成功创建一个文件，当你退出shell并且容器关闭时它会发生什么？
+>
+> > ## 答案
 > >
-> > **A1:** Use the `ls -l` command to see a detailed file listing including file ownership and permission details. You should see that most of the files in the `/` directory are owned by `root`, as you'd probably expect on any Linux system. If you look at the files in your home directory, they should be owned by you.
+> > **A1:** 使用`ls -l`命令查看详细的文件列表，包括文件所有权和权限详细信息。您应该看到 `/` 目录中的大多数文件都归`root`所有，正如您在任何Linux系统上所期望的那样。如果您查看主目录中的文件，它们应该归您所有。
 > >
-> > **A Ex1:** We've already seen from the previous answer that the files in `/` are owned by `root` so we wouldn't expect to be able to edit them if we're not the root user. However, if you tried to edit `/rawr.sh` you probably saw that the file was read only and, if you tried for example to delete the file you would have seen an error similar to the following: `cannot remove '/rawr.sh': Read-only file system`. This tells us something else about the filesystem. It's not just that we don't have permission to delete the file, the filesystem itself is read-only so even the `root` user wouldn't be able to edit/delete this file. We'll look at this in more detail shortly.
-> > 
-> > **A Ex2:** Within your home directory, you _should_ be able to successfully create a file. Since you're seeing your home directory on the host system which has been bound into the container, when you exit and the container shuts down, the file that you created within the container should still be present when you look at your home directory on the host system.
+> > **A Ex1:** 我们已经从上一个答案中看到`/` 中的文件归`root`所有，所以如果我们不是root，我们不希望能够编辑它们用户。但是，如果您尝试编辑`/rawr.sh`，您可能会看到该文件是只读的，如果您尝试删除该文件，您会看到类似于以下内容的错误：`cannot remove '/rawr .sh'：只读文件系统`。这告诉我们有关文件系统的其他信息。不仅仅是我们没有删除文件的权限，文件系统本身也是只读的，所以即使是“root”用户也无法编辑/删除这个文件。稍后我们将更详细地讨论这一点。
+> >
+> > **A Ex2:** 在您的主目录中，您_应该_能够成功创建文件。由于您在主机系统上看到已绑定到容器中的主目录，因此当您退出并且容器关闭时，当您在容器上查看您的主目录时，您在容器中创建的文件应该仍然存在主机系统。
 > {: .solution}
 {: .challenge}
 
-## Binding additional host system directories to the container
+## 将其他主机系统目录绑定到容器
 
-You will sometimes need to bind additional host system directories into a container you are using over and above those bound by default. For example:
+您有时需要将其他主机系统目录绑定到您正在使用的容器中，而不是默认绑定的那些。 例如：
 
-- There may be a shared dataset in a shard location that you need access to in the container
-- You may require executables and software libraries in the container
+- 其它目录中可能有一个共享数据集，您需要在容器中访问该数据集
+- 您可能需要容器中的可执行文件和软件库
 
-The `-B` option to the `singularity` command is used to specify additonal binds. For example, to bind the `/work/z19/shared` directory into a container you could use (note this directory is unlikely to exist on the host system you are using so you'll need to test this using a different directory):
+`singularity` 命令的`-B`选项用于指定附加绑定。 例如，要将 `/work/z19/shared` 目录绑定到您可以使用的容器中（请注意，您正在使用的主机系统上不太可能存在此目录，因此您需要使用不同的目录进行测试）：
 
 ```
 $ singularity shell -B /work/z19/shared hello-world.sif
@@ -102,16 +102,12 @@ Singularity> ls /work/z19/shared
 ```
 {: .language-bash}
 ```
-CP2K-regtest	    cube	     eleanor		   image256x192.pgm		kevin		    pblas			    q-e-qe-6.7 
-ebe		    evince.simg	     image512x384.pgm	   low_priority.slurm           pblas.tar.gz	                                    q-qe
-Q1529568	    edge192x128.pgm  extrae		   image768x1152.pgm		mkdir		    petsc			    regtest-ls-rtp_forCray
-adrianj		    edge256x192.pgm  gnuplot-5.4.1.tar.gz  image768x768.pgm		moose.job	    petsc-hypre			    udunits-2.2.28.tar.gz
-antlr-2.7.7.tar.gz  edge512x384.pgm  hj			   job-defmpi-cpe-21.03-robust	mrb4cab		    petsc-hypre-cpe21.03	    xios-2.5
-cdo-archer2.sif     edge768x768.pgm  image192x128.pgm	   jsindt			paraver		    petsc-hypre-cpe21.03-gcc10.2.0
+file1 file2 file3
+file4 file5 file6
 ```
 {: .output}
 
-Note that, by default, a bind is mounted at the same path in the container as on the host system. You can also specify where a host directory is mounted in the container by separating the host path from the container path by a colon (`:`) in the option:
+请注意，默认情况下，绑定安装在容器中与主机系统上相同的路径。 您还可以通过在选项中用冒号 (`:`) 分隔主机路径和容器路径来指定主机目录在容器中的挂载位置：
 
 ```
 $ singularity shell -B /work/z19/shared:/shared-data hello-world.sif
@@ -119,18 +115,14 @@ Singularity> ls /shared-data
 ```
 {: .language-bash}
 ```
-CP2K-regtest	    cube	     eleanor		   image256x192.pgm		kevin		    pblas			    q-e-qe-6.7 
-ebe		    evince.simg	     image512x384.pgm	   low_priority.slurm           pblas.tar.gz	                                    q-qe
-Q1529568	    edge192x128.pgm  extrae		   image768x1152.pgm		mkdir		    petsc			    regtest-ls-rtp_forCray
-adrianj		    edge256x192.pgm  gnuplot-5.4.1.tar.gz  image768x768.pgm		moose.job	    petsc-hypre			    udunits-2.2.28.tar.gz
-antlr-2.7.7.tar.gz  edge512x384.pgm  hj			   job-defmpi-cpe-21.03-robust	mrb4cab		    petsc-hypre-cpe21.03	    xios-2.5
-cdo-archer2.sif     edge768x768.pgm  image192x128.pgm	   jsindt			paraver		    petsc-hypre-cpe21.03-gcc10.2.0
+file1 file2 file3
+file4 file5 file6
 ```
 {: .output}
 
-You can also specify multiple binds to `-B` by separating them by commas (`,`).
+您还可以通过逗号 (`,`) 分隔多个绑定到 `-B`。
 
-You can also copy data into a container image at build time if there is some static data required in the image. We cover this later in the section on building Singularity containers.
+如果镜像中需要一些静态数据，您还可以在构建时将数据复制到容器镜像中。 我们稍后会在构建 Singularity 容器的部分中介绍这一点。
 
 ## References
 

@@ -1,5 +1,5 @@
 ---
-title: Figures
+title: 图表
 ---
 
 {% include base_path.html %}

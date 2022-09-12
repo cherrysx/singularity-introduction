@@ -1,66 +1,60 @@
 ---
-title: "Singularity: Getting started"
+title: "Singularity: 入门"
 start: true
 teaching: 30
 exercises: 20
 questions:
-- "What is Singularity and why might I want to use it?"
+- "什么是Singularity，我为什么要使用它？"
 objectives:
-- "Understand what Singularity is and when you might want to use it."
-- "Undertake your first run of a simple Singularity container."
+- "了解Singularity是什么以及何时可能需要使用它。"
+- "首次运行一个简单的Singularity容器。"
 keypoints:
-- "Singularity is another container platform and it is often used in cluster/HPC/research environments."
-- "Singularity has a different security model to other container platforms, one of the key reasons that it is well suited to HPC and cluster environments."
-- "Singularity has its own container image format (SIF)."
-- "The `singularity` command can be used to pull images from Singularity Hub and run a container from an image file."
+- "Singularity是另一个容器平台，通常用于集群/HPC/研究环境。"
+- "Singularity具有与其他容器平台不同的安全模型，这是它非常适合HPC和集群环境的关键原因之一。"
+- "Singularity 有自己的容器映像格式 (SIF)。"
+- "`singularity` 命令可用于从 Singularity Hub 拉取镜像并从镜像文件运行容器。"
 ---
 
-The episodes in this lesson will introduce you to the [Singularity](https://sylabs.io/singularity/) container platform and demonstrate how to set up and use Singularity.
+本课的章节将向您介绍[Singularity](https://sylabs.io/singularity/)容器平台，并演示如何设置和使用Singularity。
 
-This material is split into 2 parts:
+该材料分为两部分：
 
-*Part I: Basic usage, working with images*
- 1. **Singularity: Getting started**: This introductory episode
+*第一部分：基本用法，使用镜像*
+ 1. **Singularity：入门**：介绍
     
-Working with Singularity containers:
+使用Singularity容器：
 <ol start="2">
- <li><strong>The singularity cache: </strong> Why, where and how does Singularity cache images locally?</li>
- <li><strong>Running commands within a Singularity container: </strong> How to run commands within a Singularity container.</li>
- <li><strong>Working with files and Singularity containers: </strong> Moving files into a Singularity container; accessing files on the host from within a container.</li>
- <li><strong>Using Docker images with Singularity: </strong>How to run Singularity containers from Docker images.</li>
+ <li><strong>Singularity缓存: </strong> Singularity 为什么、在哪里以及如何在本地缓存镜像？</li>
+ <li><strong>在Singularity容器中运行命令：</strong> 如何在 Singularity 容器中运行命令。</li>
+ <li><strong>使用文件和Singularity容器：</strong> 将文件移动到 Singularity 容器中；从容器内访问主机上的文件。</li>
+ <li><strong>使用具有 Singularity 的Docker镜像：</strong>如何从Docker镜像运行 Singularity 容器。</li>
  </ol>
- *Part II: Creating images, running parallel codes*
+*第二部分：创建镜像，运行并行代码*
  <ol start="6">
-   <li><strong>Preparing to build Singularity images</strong>: Getting started with the Docker Singularity container.</li>
-   <li><strong>Building Singularity images</strong>: Explaining how to build and share your own Singularity images.</li>
-   <li><strong>Running MPI parallel jobs using Singularity containers</strong>: Explaining how to run MPI parallel codes from within Singularity containers.</li>
+   <li><strong>准备构建 Singularity 镜像</strong>：Docker Singularity 容器入门。</li>
+   <li><strong>构建Singularity镜像</strong>：解释如何构建和共享您自己的Singularity镜像。</li>
+   <li><strong>使用Singularity容器运行MPI并行作业</strong>：解释如何从Singularity容器中运行MPI并行代码。</li>
 </ol>
 
-> ## Work in progress...
-> This lesson is new material that is under ongoing development. We will introduce Singularity and demonstrate how to work with it. As the tools and best practices continue to develop, elements of this material are likely to evolve. We welcome any comments or suggestions on how the material can be improved or extended.
+# Singularity - 第1部分
+
+## 什么是Singularity?
+
+[Singularity](https://sylabs.io/singularity/) 是另一个容器平台。从用户的角度来看，在某些方面它与Docker相似，但在其他方面，特别是在系统架构方面，它是根本不同的。这些差异意味着Singularity特别适合在分布式、高性能计算 (HPC) 基础架构以及Linux笔记本电脑或台式机上运行！
+
+系统管理员通常不会将Docker安装在共享计算平台上，例如实验室桌面、研究集群或HPC平台，因为Docker的设计为多用户共享平台带来了潜在的安全问题。另一方面，Singularity可以由最终用户完全在“用户空间”内运行，也就是说，不需要为用户分配特殊的管理权限，以便他们在已安装Singularity所在的平台上运行和与容器交互。
+
+## Singularity入门
+Singularity最初在研究社区内开发，是开源的，目前可在“[下一代高性能计算](https://github.com/hpcng)” 的[repository](https://github.com/hpcng/singularity) 访问源码。 本Singularity材料的第一部分旨在在预安装Singularity的远程平台上进行。
+
+> ## 在您自己的笔记本电脑/台式机上安装 Singularity
+> 如果您有一个具有管理员权限的Linux系统，并且您想在该系统上安装Singularity，请学习[Singularity 资料的第二部分]({{ page.root }}/06-singularity-images-prep/index.html#installing-singularity-on-your-local-system-optional-advanced-task）。
 {: .callout}
 
-# Singularity - Part I
+登录到您已获得访问权限且安装了Singularity的远程平台。检查您的终端中是否有 `singularity` 命令可用：
 
-## What is Singularity?
-
-[Singularity](https://sylabs.io/singularity/) is another container platform. In some ways it appears similar to Docker from a user perspective, but in others, particularly in the system's architecture, it is fundamentally different. These differences mean that Singularity is particularly well-suited to running on distributed, High Performance Computing (HPC) infrastructure, as well as a Linux laptop or desktop! 
-
-System administrators will not, generally, install Docker on shared computing platforms such as lab desktops, research clusters or HPC platforms because the design of Docker presents potential security issues for shared platforms with multiple users. Singularity, on the other hand, can be run by end-users entirely within "user space", that is, no special administrative privileges need to be assigned to a user in order for them to run and interact with containers on a platform where Singularity has been installed.
-
-## Getting started with Singularity
-Initially developed within the research community, Singularity is open source and the [repository](https://github.com/hpcng/singularity) is currently available in the "[The Next Generation of High Performance Computing](https://github.com/hpcng)" GitHub organisation. Part I of this Singularity material is intended to be undertaken on a remote platform where Singularity has been pre-installed. 
-
-_If you're attending a taught version of this course, you will be provided with access details for a remote platform made available to you for use for Part I of the Singularity material. This platform will have the Singularity software pre-installed._
-
-> ## Installing Singularity on your own laptop/desktop
-> If you have a Linux system on which you have administrator access and you would like to install Singularity on this system, some information is provided at the start of [Part II of the Singularity material]({{ page.root }}/06-singularity-images-prep/index.html#installing-singularity-on-your-local-system-optional-advanced-task).
-{: .callout}
-
-Sign in to the remote platform, with Singularity installed, that you've been provided with access to. Check that the `singularity` command is available in your terminal:
-
-> ## Loading a module
-> HPC systems often use *modules* to provide access to software on the system so you may need to use the command:
+> ## 加载模块
+> HPC 系统通常使用 *modules* 来提供对系统上软件的访问，因此您可能需要使用以下命令：
 > ~~~
 > $ module load singularity
 > ~~~
@@ -78,27 +72,27 @@ singularity version 3.5.3
 ~~~
 {: .output}
 
-Depending on the version of Singularity installed on your system, you may see a different version. At the time of writing, `v3.5.3` is the latest release of Singularity.
+根据系统上安装的 Singularity 版本，您可能会看到不同的版本。 在撰写本文时，`v3.9.9` 是 Singularity 的最新版本。
 
-## Images and containers
+## 镜像和容器
 
-We'll start with a brief note on the terminology used in this section of the course. We refer to both **_images_** and **_containers_**. What is the distinction between these two terms? 
+我们将从简要说明本课程这一部分中使用的术语开始。 我们指的是 **_镜像_** 和 **_容器_**。 这两个术语有什么区别？
 
-**_Images_** are bundles of files including an operating system, software and potentially data and other application-related files. They may sometimes be referred to as a _disk image_ or _container image_ and they may be stored in different ways, perhaps as a single file, or as a group of files. Either way, we refer to this file, or collection of files, as an image.
+**_镜像_** 是文件包，包括操作系统、软件和潜在的数据以及其他与应用程序相关的文件。它们有时可能被称为_磁盘映像_或_容器映像_，它们可能以不同的方式存储，可能作为单个文件或作为一组文件。 无论哪种方式，我们都会将此文件或文件集合称为镜像。
 
-A **_container_** is a virtual environment that is based on an image. That is, the files, applications, tools, etc that are available within a running container are determined by the image that the container is started from. It may be possible to start multiple container instances from an image. You could, perhaps, consider an image to be a form of template from which running container instances can be started.
+**_container_** 是基于镜像的虚拟环境。也就是说，正在运行的容器中可用的文件、应用程序、工具等由启动容器的映像决定。 可以从一个镜像启动多个容器实例。也许，您可以将镜像视为一种模板形式，从中可以启动正在运行的容器实例。
 
-## Getting an image and running a Singularity container
+## 获取镜像并运行 Singularity 容器
 
-If you recall from learning about Docker, Docker images are formed of a set of _layers_ that make up the complete image. When you pull a Docker image from Docker Hub, you see the different layers being downloaded to your system. They are stored in your local Docker repository on your system and you can see details of the available images using the `docker` command.
+如果你回想一下Docker的学习，Docker镜像是由一组构成完整镜像的层组成的。 当您从 Docker Hub 拉取 Docker 映像时，您会看到不同的层正在下载到您的系统中。 它们存储在系统上的本地 Docker 存储库中，您可以使用 `docker` 命令查看可用镜像的详细信息。
 
-Singularity images are a little different. Singularity uses the [Singularity Image Format (SIF)](https://github.com/sylabs/sif) and images are provided as single `SIF` files (with a `.sif` filename extension). Singularity images can be pulled from [Singularity Hub](https://singularity-hub.org/), a registry for container images. Singularity is also capable of running containers based on images pulled from [Docker Hub](https://hub.docker.com/) and some other sources. We'll look at accessing containers from Docker Hub later in the Singularity material.
+Singularity镜像有点不同。Singularity 使用 [Singularity Image Format (SIF)](https://github.com/sylabs/sif) 并且镜像作为单个 `SIF` 文件（带有 `.sif` 文件扩展名）提供。 Singularity镜像可以从容器镜像的注册中心 [Singularity Hub](https://singularity-hub.org/) 中提取。 Singularity 还能够基于从 [Docker Hub](https://hub.docker.com/) 和其他一些来源提取的镜像运行容器。 稍后我们将在 Singularity 材料中介绍从 Docker Hub 访问容器。
 
-> ## Singularity Hub
-> Note that in addition to providing a repository that you can pull images from, [Singularity Hub](https://singularity-hub.org/) can also build Singularity images for you from a _**recipe**_ - a configuration file defining the steps to build an image. We'll look at recipes and building images later.
+> ## Singularity镜像中心
+> 请注意，除了提供可以从中提取镜像的存储库之外，[Singularity Hub](https://singularity-hub.org/) 还可以从 _**recipe**_ - 配置为您构建 Singularity 镜像 定义构建映像的步骤的文件。稍后我们将查看recipe和构建镜像。
 {: .callout}
 
-Let's begin by creating a `test` directory, changing into it and _pulling_ a test _Hello World_ image from Singularity Hub:
+让我们首先创建一个 `test` 目录，进入它并从Singularity Hub _pulling_一个测试_Hello World_镜像：
 
 ~~~
 $ mkdir test
@@ -113,7 +107,7 @@ INFO:    Downloading shub image
 ~~~
 {: .output}
 
-What just happened?! We pulled a SIF image from Singularity Hub using the `singularity pull` command and directed it to store the image file using the name `hello-world.sif` in the current directory. If you run the `ls` command, you should see that the `hello-world.sif` file is now present in the current directory. This is our image and we can now run a container based on this image:
+刚刚发生了什么？！ 我们使用 `singularity pull` 命令从 Singularity Hub 中提取了一个 SIF 镜像，并指示它使用名称 `hello-world.sif` 将镜像文件存储在当前目录中。 如果您运行`ls`命令，您应该会看到`hello-world.sif`文件现在存在于当前目录中。这是我们的镜像，我们现在可以基于这个镜像运行一个容器：
 
 ~~~
 $ singularity run hello-world.sif
@@ -125,12 +119,11 @@ RaawwWWWWWRRRR!! Avocado!
 ~~~
 {: .output}
 
-The above command ran the _hello-world_ container from the image we downloaded from Singularity Hub and the resulting output was shown. 
+上面的命令从我们从Singularity Hub下载的镜像中运行_hello-world_容器，并显示了结果输出。
 
+当我们运行它时，容器是如何确定要做什么的？！ 运行容器实际上做了什么导致显示的输出？
 
-How did the container determine what to do when we ran it?! What did running the container actually do to result in the displayed output?
-
-When you run a container from a Singularity image without using any additional command line arguments, the container runs the default run script that is embedded within the image. This is a shell script that can be used to run commands, tools or applications stored within the image on container startup. We can inspect the image's run script using the `singularity inspect` command:
+当您从 Singularity 映像运行容器而不使用任何其他命令行参数时，容器会运行嵌入在映像中的默认运行脚本。 这是一个 shell 脚本，可用于在容器启动时运行存储在映像中的命令、工具或应用程序。 我们可以使用 `singularity inspect` 命令检查镜像的运行脚本：
 
 ~~~
 $ singularity inspect -r hello-world.sif
@@ -145,6 +138,6 @@ exec /bin/bash /rawr.sh
 ~~~
 {: .output}
 
-This shows us the script within the `hello-world.sif` image configured to run by default when we use the `singularity run` command.
+这向我们展示了当我们使用`singularity run`命令时配置为默认运行的 `hello-world.sif` 映像中的脚本。
 
-That concludes this introductory Singularity episode. The next episode looks in more detail at running containers.
+接下来将更详细地介绍正在运行的容器。

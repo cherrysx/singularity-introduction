@@ -1,142 +1,140 @@
 ---
-title: "Preparing to build Singularity images"
+title: "为构建Singularity镜像做准备"
 teaching: 15
 exercises: 20
 questions:
-- "What environment do I need to build a Singularity image and how do I set it up?"
+- "构建Singularity镜像需要什么环境以及如何设置？"
 objectives:
-- "Understand how to the Docker Singularity image provides an environment for building Singularity images."
-- "Understand different ways to run containers based on the Docker Singularity image."
+- "了解Docker镜像如何为构建Singularity镜像提供环境。"
+- "了解基于Docker的Singularity镜像运行容器的不同方法。"
 keypoints:
-- "A Docker image is provided to run Singularity - this avoids the need to have a local Singularity installation on your system."
-- "The Docker Singularity image can be used to build containers on Linux, macOS and Windows."
-- "You can also run Singularity containers within the Docker Singularity image."
+- "基于Docker镜像运行Singularity - 这避免了在您的系统上安装本地Singularity的需要。"
+- "Docker Singularity镜像可用于在 Linux、macOS 和 Windows 上构建容器。"
+- "您还可以在Docker Singularity镜像中运行Singularity容器。"
 ---
 
-# Singularity - Part II
+# Singularity - 第二部分
 
-## Brief recap
+## 简要回顾
 
-In the five episodes covering Part I of this Singularity material we've seen how Singularity can be used on a computing platform where you don't have any administrative privileges. The software was pre-installed and it was possible to work with existing images such as Singularity image files already stored on the platform or images obtained from a remote image repository such as Singularity Hub or Docker Hub.
+在涵盖本Singularity材料第一部分中，我们已经了解了如何在您没有任何管理权限的计算平台上使用 Singularity。 该软件是预安装的，可以使用现有的镜像，例如已经存储在平台上的 Singularity 镜像文件或从远程镜像存储库（例如 Singularity Hub 或 Docker Hub）获得的镜像。
 
-It is clear that between Singularity Hub and Docker Hub there is a huge array of images available, pre-configured with a wide range of software applications, tools and services. But what if you want to create your own images or customise existing images?
+很明显，在 Singularity Hub 和 Docker Hub 之间，有大量可用的镜像，预先配置了广泛的软件应用程序、工具和服务。 但是，如果您想创建自己的镜像或自定义现有镜像怎么办？
 
-In this first of three episodes in Part II of the Singularity material, we'll look at preparing to build Singularity images.
+接下来，我们将着眼于准备构建 Singularity 镜像。
 
-## Preparing to use Singularity for building images
+## 准备使用 Singularity 构建镜像
 
-So far you've been able to work with Singularity from your own user account as a non-privileged user. This part of the Singularity material requires that you use Singularity in an environment where you have administrative (root) access. While it is possible to build Singularity containers without root access, it is highly recommended that you do this as the _root_ user, as highlighted in [this section](https://sylabs.io/guides/3.5/user-guide/build_a_container.html#creating-writable-sandbox-directories) of the Singularity documentation. Bear in mind that the system that you use to build containers doesn't have to be the system where you intend to run the containers. If, for example, you are intending to build a container that you can subsequently run on a Linux-based cluster, you could build the container on your own Linux-based desktop or laptop computer. You could then transfer the built image directly to the target platform or upload it to an image repository and pull it onto the target platform from this repository.
+到目前为止，您已经能够从您自己的用户帐户作为非特权用户使用Singularity。 Singularity材料的这一部分要求您在具有管理（根）访问权限的环境中使用 Singularity。虽然可以在没有root访问权限的情况下构建Singularity容器，但强烈建议您以_root_用户身份执行此操作，如[本节](https://sylabs.io/guides/3.5/user-guide/build_a_container.html#creating-writable-sandbox-directories) 的 Singularity文档。请记住，您用于构建容器的系统不一定是您打算运行容器的系统。例如，如果您打算构建一个随后可以在基于Linux的集群上运行的容器，您可以在您自己的基于Linux的台式机或笔记本电脑上构建该容器。然后，您可以将构建的镜像直接传输到目标平台或将其上传到镜像存储库并从该存储库将其拉到目标平台上。
 
-There are **three** different options for accessing a suitable environment to undertake the material in this part of the course:
+有**三种**不同的选项可用于访问合适的环境来学习这部分：
 
- 1. Run Singularity from within a Docker container - this will enable you to have the required privileges to build images
- 1. Install Singularity locally on a system where you have administrative access
- 1. Use Singularity on a system where it is already pre-installed and you have administrative (root) access
+ 1. 在Docker容器中运行Singularity - 这将使您拥有构建镜像所需的权限
+ 1. 在您具有管理权限的系统上本地安装Singularity
+ 1. 在已预安装Singularity且您具有管理（根）访问权限的系统上使用Singularity
 
-We'll focus on the first option in this part of the course - _running singularity from within a Docker container_. If you would like to install Singularity directly on your system, see the box below for some further pointers. However, please note that the installation process is an advanced task that is beyond the scope of this course so we won't be covering this.
+在这部分中，我们将重点关注第一个选项——_从 Docker 容器中运行Singularity_。如果您想直接在您的系统上安装Singularity，请参阅下面的框以获取更多指示。但是，请注意，安装过程是一项超出范围的高级任务，因此我们不会对此进行介绍。
 
-> ## Installing Singularity on your local system (optional) \[Advanced task\]
+> ## 在本地系统上安装Singularity（可选）\[高级任务\]
 >
-> If you are running Linux and would like to install Singularity locally on your system, the source code is provided via the [The Next Generation of High Performance Computing (HPCng) community](https://github.com/hpcng)'s [Singularity repository](https://github.com/hpcng/singularity). See the releases [here](https://github.com/hpcng/singularity/releases). You will need to install various dependencies on your system and then build Singularity from source code.
+> 如果您正在运行Linux并希望在您的系统上本地安装Singularity，源代码由 [下一代高性能计算 (HPCng) 社区](https://github.com/hpcng) 提供 [Singularity存储库]（https://github.com/hpcng/singularity）。请参阅 [此处](https://github.com/hpcng/singularity/releases) 的版本。您需要在系统上安装各种依赖项，然后从源代码构建Singularity。
 >
-> _If you are not familiar with building applications from source code, it is strongly recommended that you use the Docker Singularity image, as described below in the "Getting started with the Docker Singularity image" section rather than attempting to build and install Singularity yourself. The installation process is an advanced task that is beyond the scope of this session._
+> _如果您不熟悉从源代码构建应用程序，强烈建议您使用Docker Singularity 镜像，如下面的“Docker Singularity 镜像入门”部分所述，而不是尝试自己构建和安装 Singularity。安装过程是一项高级任务，超出了本次会议的范围。_
 > 
-> However, if you have Linux systems knowledge and would like to attempt a local install of Singularity, you can find details in the [INSTALL.md](https://github.com/hpcng/singularity/blob/master/INSTALL.md) file within the Singularity repository that explains how to install the prerequisites and build and install the software. Singularity is written in the [Go](https://golang.org/) programming language and Go is the main dependency that you'll need to install on your system. The process of installing Go and any other requirements is detailed in the INSTALL.md file.
+> 但是，如果您有Linux系统知识并想尝试在本地安装Singularity，您可以在[INSTALL.md](https://github.com/hpcng/singularity/blob/master/INSTALL.md) 中找到详细信息 ) 文件在 Singularity 存储库中解释如何安装先决条件以及构建和安装软件。Singularity是用 [Go](https://golang.org/) 编程语言编写的，Go是您需要在系统上安装的主要依赖项。 安装Go的过程和任何其他要求在 INSTALL.md 文件中有详细说明。
 > 
 {: .callout}
 
-> ## Note
-> If you do not have access to a system with Docker installed, or a Linux system where you can build and install Singularity but you have administrative privileges on another system, you could look at installing a virtualisation tool such as [VirtualBox](https://www.virtualbox.org/) on which you could run a Linux Virtual Machine (VM) image. Within the Linux VM image, you will be able to install Singularity. Again this is beyond the scope of the course.
+> ## 笔记
+> 如果您无法访问安装了Docker的系统，或者您可以构建和安装Singularity但您在另一个系统上具有管理权限的Linux系统，您可以考虑安装虚拟化工具，例如[VirtualBox](https: //www.virtualbox.org/)，您可以在其上运行Linux虚拟机 (VM) 镜像。在Linux VM镜像中，您将能够安装 Singularity。
 >
-> If you are not able to access/run Singularity yourself on a system where you have administrative privileges, you can still follow through this material as it is being taught (or read through it in your own time if you're not participating in a taught version of the course) since it will be helpful to have an understanding of how Singularity images can be built.
-> 
-> You could also attempt to follow this section of the lesson without using root and instead using the `singularity` command's [`--fakeroot`](https://sylabs.io/guides/3.5/user-guide/fakeroot.html) option. However, you may encounter issues with permissions when trying to build images and run your containers and this is why running the commands as root is strongly recommended and is the approach described in this lesson.
+> 如果您无法在您拥有管理权限的系统上自己访问/运行Singularity，您仍然可以按照正在教授的方式阅读本材料（或者如果您没有参加课程的教学版本），因为这将有助于了解如何构建Singularity镜像。
+>
+> 您也可以尝试不使用root而是使用`singularity`命令的 [`--fakeroot`]（https://sylabs.io/guides/3.5/user-guide/fakeroot.html ） 选项。但是，在尝试构建镜像和运行容器时，您可能会遇到权限问题，这就是强烈建议以 root 身份运行命令的原因，这也是本课中描述的方法。
 {: .callout}
 
-## Getting started with the Docker Singularity image
+## Docker Singularity镜像入门
 
-The [Singularity Docker image](https://quay.io/repository/singularity/singularity) is available from [Quay.io](https://quay.io/).
+[Singularity Docker镜像](https://quay.io/repository/singularity/singularity) 可从 [Quay.io](https://quay.io/) 获得。
 
-> ## Familiarise yourself with the Docker Singularity image
-> - Using your previously acquired Docker knowledge, get the Singularity image for `v3.5.3` and ensure that you can run a Docker container using this image. For this exercise, we recommend using the image with the `v3.5.3-slim` tag since it's a much smaller image.
+> ## 熟悉 Docker Singularity 镜像
+>  
+> - 使用您之前获得的Docker知识，获取Singularity镜像，并确保您可以使用此镜像运行Docker容器。
+>  
+> - 在您的主机上创建一个目录（例如`$HOME/singularity_data`），您可以使用它来存储_定义文件_（我们将很快介绍这些）和生成的镜像文件。
+>
+> 每次运行时，该目录都应该绑定挂载到 Docker 容器的 `/home/singularity` 位置 - 这将为您提供一个存储构建镜像的位置，以便一旦容器可以在主机系统上使用它们 退出。（看看 `-v` 切换到 `docker run` 命令）
+>
+> _提示：为了能够使用 Docker Singularity容器构建镜像，您需要将 `--privileged` 开关添加到docker命令行。_
+>
+> _提示：如果你想在Docker Singularity容器中运行shell，你需要覆盖入口点来告诉容器运行`/bin/bash` - 看看Docker的 `--entrypoint`开关。_
 > 
-> - Create a directory (e.g. `$HOME/singularity_data`) on your host machine that you can use for storage of _definition files_ (we'll introduce these shortly) and generated image files. 
 > 
->   This directory should be bind mounted into the Docker container at the location `/home/singularity` every time you run it - this will give you a location in which to store built images so that they are available on the host system once the container exits. (take a look at the `-v` switch to the `docker run` command)
+> 问题/练习：
 > 
-> _Hint: To be able to build an image using the Docker Singularity container, you'll need to add the `--privileged` switch to your docker command line._
+> 1. 可以从 Docker Singularity镜像运行容器吗？ 运行容器时发生了什么？
+> 1. 可以在 Docker Singularity容器中运行交互式的 `/bin/sh` shell 吗？
+> 1. 你能在 Docker Singularity容器中的 Singularity 容器中运行交互式 Singularity shell 吗？！
 > 
-> _Hint: If you want to run a shell within the Docker Singularity container, you'll need to override the entrypoint to tell the container to run `/bin/bash` - take a look at Docker's `--entrypoint` switch._
-> 
-> 
-> Questions / Exercises:
-> 
-> 1. Can you run a container from the Docker Singularity image? What is happening when you run the container?
-> 1. Can you run an interactive `/bin/sh` shell in the Docker Singularity container?
-> 1. Can you run an interactive Singularity shell in a Singularity container, within the Docker Singularity container?!
-> 
-> > ## Running a container from the image
-> > Answers:
-> > 1. _Can you run a container from the Docker Singularity image? What is happening when you run the container?_
-> >   
-> >     The name/tag of the Docker Singularity image we'll be using is: `quay.io/singularity/singularity:v3.5.3-slim`
-> >   
-> >     Having a bound directory from the host system accessible within your running Docker Singularity container will give you somewhere to place created Singularity images so that they are accessible on the host system after the container exits. Begin by changing into the directory that you created above for storing your definiton files and built images (e.g. `$HOME/singularity_data`). 
-> >   
-> >     Running a Docker container from the image and binding the current directory to `/home/singularity` within the container can be achieved as follows:
+> > ## 从镜像运行容器
+> > 答案：
+> > 1. _你能从 Docker Singularity 镜像运行容器吗？ 运行容器时发生了什么？_
+> >
+> > 我们将使用的 Docker Singularity 镜像的名称/标签是：`quay.io/singularity/singularity:v3.5.3-slim`
+> >
+> > 在您正在运行的 Docker Singularity 容器中拥有一个可从主机系统访问的绑定目录将为您提供放置创建的 Singularity 映像的位置，以便在容器退出后可以在主机系统上访问它们。 首先切换到您在上面创建的用于存储定义文件和构建镜像的目录（例如`$HOME/singularity_data`）。
+> >
+> > 从镜像中运行一个 Docker 容器，并将当前目录绑定到容器内的 `/home/singularity` 可以实现如下：
 > >   
 > >     ```
 > >     docker run --privileged --rm -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim
 > >     ```
-> >     Note that the image is configured to run the `singularity` command by default. So, when you run a container from it with no arguments, you see the singularity help output as if you had Singularity installed locally and had typed `singularity` on the command line.
+> >     请注意，镜像默认配置为运行 `singularity` 命令。 因此，当您在不带参数的情况下运行容器时，您会看到奇异性帮助输出，就像您在本地安装了 Singularity 并在命令行上键入了“singularity”一样。
 > >     
-> >     To run a Singularity command, such as `singularity cache list`, within the docker container directly from the host system's terminal you'd enter:
+> >     要直接从主机系统的终端在 docker 容器中运行 Singularity 命令，例如“singularity cache list”，您需要输入：
 > >     
 > >     ```
 > >     docker run --privileged --rm -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim cache list
 > >     ```
 > >     
-> >     The following diagram shows how the Docker Singularity image is being used to run a container on your host system and how a Singularity container can, in turn, be started within the Docker container:
+> >     下图显示了如何使用 Docker Singularity 映像在主机系统上运行容器，以及如何依次在 Docker 容器中启动 Singularity 容器：
 > >     
 > >     ![](/fig/SingularityInDocker.png)
 > >     
-> > 1. _Can you run an interactive shell in the Docker Singularity container?_
-> >    
-> >    To start a shell within the Singularity Docker container where you can then run the `singularity` command directly:
+> > 1. _你能在 Docker Singularity容器中运行交互式shell吗？_
+> >
+> > 要在 Singularity Docker 容器中启动一个 shell，您可以在其中直接运行 `singularity` 命令：
 > >    ```
 > >    docker run -it --entrypoint=/bin/sh --privileged --rm -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim
 > >    ```
-> >    Here we use the `--entrypoint` switch to the `docker` command to override the default behaviour when starting the container and instead of running the `singularity` command directly, we run a 'sh' shell. We also add the `-it` switch to provide an interactive terminal connection.
+> >    在这里，我们使用`--entrypoint`切换到 `docker`命令来覆盖启动容器时的默认行为，而不是直接运行`singularity` 命令，我们运行 'sh' shell。 我们还添加了 `-it` 开关以提供交互式终端连接。
 > >     
 > >         
-> > 1. _Can you run an interactive Singularity shell in a Singularity container, within the Docker Singularity container?!_
-> >     
-> >    As shown in the diagram above, you can do this. It is necessary to run `singularity shell <image file name>` within the Docker Singularity container. You would use a command similar to the following (assuming that `my_test_image.sif` is in the current directory where you run this command):
+> > 1. _你能在 Docker Singularity容器中的 Singularity 容器中运行交互式 Singularity shell 吗？！_
+> >
+> > 如上图所示，您可以这样做。 需要在 Docker Singularity 容器中运行`singularity shell <image file name>`。 您将使用类似于以下的命令（假设 `my_test_image.sif` 位于运行此命令的当前目录中）：
 > >     
 > >    ```
 > >    docker run --rm -it --privileged -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim shell --contain /home/singularity/my_test_image.sif
 > >    ```
 > >    
-> >    You may notice there's a flag being passed to singularity shell (`--contain` - `-c` is the short form and also works). What is this doing? When running a singularity container, you may remember that we highlighted that some key files/directories from the host system are mapped into containers by default when you start them. The configuration in the Docker Singularity container attempts to mount the file `/etc/localtime` into the Singularity container but there is not a timezone configuration present in the Docker Singularity container and this file doesn't exist resulting in an error. `--contain` prevents the default mounting of some key files/directories into the container and prevents this error from occurring. Later in this material, there's an example of how to rectify the issue by creating a timezone configuration in the Docker Singularity container so that the `--contain` switch is no longer needed.
+> >    你可能会注意到有一个标志被传递给了奇异性shell（`--contain` - `-c` 是简写形式并且也有效）。 这是在做什么？ 在运行奇异容器时，您可能还记得我们强调过，主机系统中的一些关键文件/目录在启动时默认映射到容器中。 Docker Singularity 容器中的配置尝试将文件`/etc/localtime` 挂载到 Singularity 容器中，但 Docker Singularity 容器中不存在时区配置，并且该文件不存在导致错误。 `--contain` 防止将某些关键文件/目录默认挂载到容器中，并防止发生此错误。 在本材料的后面，有一个示例说明如何通过在 Docker Singularity 容器中创建时区配置来纠正问题，从而不再需要 --contain 开关。
 > > 
-> > _Summary / Comments:_
-> > 
-> > You may choose to:
-> >   - open a shell within the Docker image so you can work at a command prompt and run the `singularity` command directly
-> >   - use the `docker run` command to run a new container instance every time you want to run the `singularity` command (the Docker Singularity image is configured with the `singularity` command as its entrypoint).
-> > 
-> > Either option is fine for this section of the material.
-> > 
-> > To make things easier to read in the remainder of the material, command examples will use the `singularity` command directly, e.g. `singularity cache list`. If you're running a shell in the Docker Singularity container, you can enter the commands as they appear. If you're using the container's default run behaviour and running a container instance for each run of the command, you'll need to replace `singularity` with `docker run --privileged -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim` or similar.
-> > 
-> > This can be a little cumbersome to work with. However, if you're using Linux or macOS on your host system, you can add a _command alias_ to alias the command `singularity` on your host system to run the Docker Singularity container, e.g. (for bash shells - syntax for other shells varies):
+> > _总结/评论_
+> >
+> > 您可以选择：
+> > - 在Docker映像中打开一个shell，以便您可以在命令提示符下工作并直接运行`singularity`命令
+> > - 每次要运行`singularity`命令时，使用`docker run`命令运行一个新的容器实例（Docker Singularity 映像配置了`singularity 命令作为其入口点）。
+> >
+> > 命令示例将直接使用 `singularity` 命令，例如`singularity cache list`。如果您在 Docker Singularity 容器中运行 shell，则可以输入出现的命令。如果您使用容器的默认运行行为并为每次运行命令运行容器实例，则需要将 `singularity` 替换为 `docker run --privileged -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim` 或类似的。
+> >
+> > 这可能有点麻烦。但是，如果您在主机系统上使用 Linux 或 macOS，您可以添加 _command alias_ 来为主机系统上的命令 `singularity` 设置别名，以运行 Docker Singularity 容器，例如（对于 bash shell - 其他 shell 的语法有所不同）：
 > > 
 > > ```
 > > alias singularity='docker run --privileged -v ${PWD}:/home/singularity quay.io/singularity/singularity:v3.5.3-slim'
 > > ```
-> > 
-> > This means you'll only have to type `singularity` at the command line as shown in the examples throughout this section of the material
+> >  
+> > 这意味着您只需在命令行中键入“singularity”，如本部分材料中的示例所示
 > >
-> >     
 > {: .solution}
 {: .challenge}

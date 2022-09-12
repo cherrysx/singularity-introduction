@@ -1,23 +1,23 @@
 ---
-title: "The Singularity cache"
+title: "Singularity缓存"
 teaching: 10
 exercises: 0
 questions:
-- "Why does Singularity use a local cache?"
-- "Where does Singularity store images?"
+- "为什么 Singularity 使用本地缓存？"
+- "Singularity 在哪里存储镜像？"
 objectives:
-- "Learn about Singularity's image cache."
-- "Learn how to manage Singularity images stored locally."
+- "了解 Singularity 的镜像缓存。"
+- "了解如何管理本地存储的 Singularity 镜像。"
 keypoints:
-- "Singularity caches downloaded images so that an unchanged image isn't downloaded again when it is requested using the `singularity pull` command."
-- "You can free up space in the cache by removing all locally cached images or by specifying individual images to remove."
+- "Singularity 缓存下载的镜像，以便在使用“singularity pull”命令请求时不会再次下载未更改的镜像。"
+- "您可以通过删除所有本地缓存的镜像或指定要删除的单个镜像来释放缓存中的空间。"
 ---
 
-## Singularity's image cache
+## Singularity的镜像缓存
 
-While Singularity doesn't have a local image repository in the same way as Docker, it does cache downloaded image files. As we saw in the previous episode, images are simply `.sif` files stored on your local disk. 
+虽然 Singularity 没有像 Docker 那样的本地镜像存储库，但它会缓存下载的镜像文件。正如我们在上一集中看到的，镜像只是存储在本地磁盘上的“.sif”文件。
 
-If you delete a local `.sif` image that you have pulled from a remote image repository and then pull it again, if the image is unchanged from the version you previously pulled, you will be given a copy of the image file from your local cache rather than the image being downloaded again from the remote source. This removes unnecessary network transfers and is particularly useful for large images which may take some time to transfer over the network. To demonstrate this, remove the `hello-world.sif` file stored in your `test` directory and then issue the `pull` command again:
+如果您删除从远程映像存储库中拉取的本地“.sif”映像，然后再次拉取它，如果该映像与您之前拉取的版本没有变化，您将获得本地映像文件的副本缓存而不是从远程源再次下载镜像。 这消除了不必要的网络传输，对于可能需要一些时间通过网络传输的大型镜像特别有用。为了证明这一点，删除存储在 `test` 目录中的 `hello-world.sif` 文件，然后再次发出 `pull` 命令：
 
 ~~~
 $ rm hello-world.sif
@@ -30,9 +30,9 @@ INFO:    Use image from cache
 ~~~
 {: .output}
 
-As we can see in the above output, the image has been returned from the cache and we don't see the output that we saw previously showing the image being downloaded from Singularity Hub.
+正如我们在上面的输出中看到的那样，镜像已经从缓存中返回，我们看不到我们之前看到的输出：显示正在从 Singularity Hub 下载镜像。
 
-How do we know what is stored in the local cache? We can find out using the `singularity cache` command:
+我们如何知道本地缓存中存储了什么？ 我们可以使用 `singularity cache` 命令找出：
 
 ~~~
 $ singularity cache list
@@ -45,7 +45,7 @@ Total space used: 62.65 MB
 ~~~
 {: .output}
 
-This tells us how many container files are stored in the cache and how much disk space the cache is using but it doesn't tell us _what_ is actually being stored. To find out more information we can add the `-v` verbose flag to the `list` command:
+这告诉我们缓存中存储了多少容器文件以及缓存使用了多少磁盘空间，但它并没有告诉我们实际存储的是什么。 要了解更多信息，我们可以将 `-v` 详细标志添加到 `list` 命令：
 
 ~~~
 $ singularity cache list -v
@@ -61,14 +61,14 @@ Total space used: 62.65 MB
 ~~~
 {: .output}
 
-This provides us with some more useful information about the actual images stored in the cache. In the `TYPE` column we can see that our image type is `shub` because it's a `SIF` image that has been pulled from Singularity Hub. 
+这为我们提供了一些关于存储在缓存中的实际镜像的更多有用信息。 在 `TYPE` 列中，我们可以看到我们的镜像类型是 `shub`，因为它是从 Singularity Hub 提取的 `SIF` 镜像。
 
-> ## Cleaning the Singularity image cache
-> We can remove images from the cache using the `singularity cache clean` command. Running the command without any options will display a warning and ask you to confirm that you want to remove everything from your cache.
+> ## 清理 Singularity 镜像缓存
+> 我们可以使用 `singularity cache clean` 命令从缓存中删除镜像。运行不带任何选项的命令将显示警告并要求您确认是否要从缓存中删除所有内容。
 >
-> You can also remove specific images or all images of a particular type. Look at the output of `singularity cache clean --help` for more information.
+> 您还可以删除特定镜像或特定类型的所有镜像。查看 `singularity cache clean --help` 的输出以获取更多信息。
 {: .callout}
 
-> ## Cache location
-> By default, Singularity uses `$HOME/.singularity/cache` as the location for the cache. You can change the location of the cache by setting the `SINGULARITY_CACHEDIR` environment variable to the cache location you want to use.
+> ## 缓存位置
+> 默认情况下，Singularity 使用 `$HOME/.singularity/cache`作为缓存的位置。 您可以通过将 `SINGULARITY_CACHEDIR` 环境变量设置为您要使用的缓存位置来更改缓存的位置。
 {: .callout}

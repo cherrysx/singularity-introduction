@@ -1,23 +1,23 @@
 ---
-title: "Using Singularity containers to run commands"
+title: "使用Singularity容器运行命令"
 teaching: 10
 exercises: 5
 questions:
-- "How do I run different commands within a container?"
-- "How do I access an interactive shell within a container?"
+- "如何在容器中运行不同的命令？"
+- "如何访问容器内的交互式shell？"
 objectives:
-- "Learn how to run different commands when starting a container."
-- "Learn how to open an interactive shell within a container environment."
+- "了解如何在启动容器时运行不同的命令。"
+- "了解如何在容器环境中打开交互式shell。"
 keypoints:
-- "The `singularity exec` is an alternative to `singularity run` that allows you to start a container running a specific command."
-- "The `singularity shell` command can be used to start a container and run an interactive shell within it."
+- "`singularity exec` 是 `singularity run` 的替代方案，它允许您启动运行特定命令的容器。"
+- "`singularity shell` 命令可用于启动容器并在其中运行交互式 shell。"
 ---
 
-## Running specific commands within a container
+## 在容器中运行特定命令
 
-We saw earlier that we can use the `singularity inspect` command to see the run script that a container is configured to run by default. What if we want to run a different command within a container?
+我们之前看到，我们可以使用 `singularity inspect` 命令查看容器配置为默认运行的运行脚本。如果我们想在容器中运行不同的命令怎么办？
 
-If we know the path of an executable that we want to run within a container, we can use the `singularity exec` command. For example, using the `hello-world.sif` container that we've already pulled from Singularity Hub, we can run the following within the `test` directory where the `hello-world.sif` file is located:
+如果我们知道要在容器中运行的可执行文件的路径，我们可以使用`singularity exec`命令。 例如，使用我们已经从 Singularity Hub 中提取的 `hello-world.sif`容器，我们可以在 `hello-world.sif`文件所在的`test`目录中运行以下命令：
 
 ~~~
 $ singularity exec hello-world.sif /bin/echo Hello World!
@@ -29,15 +29,15 @@ Hello World!
 ~~~
 {: .output}
 
-Here we see that a container has been started from the `hello-world.sif` image and the `/bin/echo` command has been run within the container, passing the input `Hello World!`. The command has echoed the provided input to the console and the container has terminated.
+在这里，我们看到一个容器已经从`hello-world.sif`镜像启动，并且`/bin/echo`命令已经在容器中运行，并传递了输入 `Hello World!`。 该命令已将提供的输入回显到控制台，并且容器已终止。
 
-Note that the use of `singularity exec` has overriden any run script set within the image metadata and the command that we specified as an argument to `singularity exec` has been run instead.
+请注意，`singularity exec`的使用已经覆盖了镜像元数据中设置的任何运行脚本，并且我们指定为 `singularity exec` 的参数的命令已被运行。
 
-> ## Basic exercise: Running a different command within the "hello-world" container
+> ## 基本练习：在“hello-world”容器中运行不同的命令
 >
-> Can you run a container based on the `hello-world.sif` image that **prints the current date and time**?
+> 你能运行一个基于`hello-world.sif`镜像的容器，**打印当前日期和时间**吗？
 > 
-> > ## Solution
+> > ## 解决方案
 > >
 > > ~~~
 > > $ singularity exec hello-world.sif /bin/date
@@ -52,29 +52,18 @@ Note that the use of `singularity exec` has overriden any run script set within 
 {: .challenge}
 
 <br/>
-#### **The difference between `singularity run` and `singularity exec`**
 
-Above we used the `singularity exec` command. In earlier episodes of this
-course we used `singularity run`. To clarify, the difference between these
-two commands is:
+### **`singularity run`和`singularity exec`的区别**
 
- - `singularity run`: This will run the default command set for containers
-   based on the specfied image. This default command is set within
-   the image metadata when the image is built (we'll see more about this
-   in later episodes). You do not specify a command to run when using
-   `singularity run`, you simply specify the image file name. As we saw 
-   earlier, you can use the `singularity inspect` command to see what command
-   is run by default when starting a new container based on an image.
+上面我们使用了`singularity exec`命令。 在之前，我们使用了“singularity run”。 为了澄清，这两个命令之间的区别是：
 
- - `singularity exec`: This will start a container based on the specified
-   image and run the command provided on the command line following
-   `singularity exec <image file name>`. This will override any default
-   command specified within the image metadata that would otherwise be
-   run if you used `singularity run`.
+ - `singularity run`：这将根据指定的镜像运行容器的默认命令集。这个默认命令是在构建镜像时在镜像元数据中设置的（我们将在后面看到更多关于这个的内容）。使用 `singularity run` 时无需指定要运行的命令，只需指定镜像文件名即可。 正如我们之前看到的，您可以使用 `singularity inspect` 命令查看在基于映像启动新容器时默认运行的命令。
 
-## Opening an interactive shell within a container
+ - `singularity exec`：这将基于指定的镜像启动一个容器，并运行`singularity exec <镜像文件名>`后面的命令行提供的命令。这将覆盖在镜像元数据中指定的任何默认命令，如果您使用“singularity run”，这些默认命令将被运行。
 
-If you want to open an interactive shell within a container, Singularity provides the `singularity shell` command. Again, using the `hello-world.sif` image, and within our `test` directory, we can run a shell within a container from the hello-world image:
+## 在容器中打开交互式shell
+
+如果要在容器中打开交互式 shell，Singularity 提供了`singularity shell` 命令。 同样，使用 `hello-world.sif` 映像，在我们的 `test` 目录中，我们可以在 hello-world 映像的容器中运行 shell：
 
 ~~~
 $ singularity shell hello-world.sif
@@ -90,15 +79,13 @@ Singularity>
 ~~~
 {: .output}
 
-As shown above, we have opened a shell in a new container started from the `hello-world.sif` image. Note that the shell prompt has changed to show we are now within the Singularity container.
+如上所示，我们在一个从 `hello-world.sif` 映像启动的新容器中打开了一个 shell。 请注意，shell 提示已更改为显示我们现在位于 Singularity 容器中。
 
-> ## Discussion: Running a shell inside a Singularity container
+> ## 讨论：在 Singularity 容器中运行 shell
 >
-> Q: What do you notice about the output of the above commands entered within the Singularity container shell?
-> 
-> Q: Does this differ from what you might see within a Docker container?
+> Q: 关于在 Singularity 容器 shell 中输入的上述命令的输出，您注意到了什么？
+>  
+> Q: 这与您在 Docker 容器中看到的不同吗？
 {: .discussion}
 
-Use the `exit` command to exit from the container shell.
-
-
+使用 `exit` 命令退出容器shell。
